@@ -32,6 +32,8 @@ interface Cycle {
   task: string;
   minutesAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
+  finishedDate?: Date;
 }
 
 export function Home() {
@@ -50,20 +52,40 @@ export function Home() {
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
+  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
+
   useEffect(() => {
     let interval: number;
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
+
+        if (secondsDifference > totalSeconds) {
+          setCycles((state) => {
+            return state.map((cycle) => {
+              if (cycle === activeCycle) {
+                return { ...cycle, finishedDate: new Date() };
+              } else {
+                return cycle;
+              }
+            });
+          });
+          setActiveCycleId((state) => {
+            return (state = null);
+          });
+        } else {
+          setAmountSecondsPassed(secondsDifference);
+        }
       }, 1000);
     }
 
     return () => {
       clearInterval(interval);
     };
-  }, [activeCycle]);
+  }, [activeCycle, totalSeconds, activeCycleId]);
 
   function handleCreateNewCycle(data: NewCycleFormData) {
     const newCycle: Cycle = {
@@ -80,8 +102,6 @@ export function Home() {
     reset();
   }
 
-  const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
-
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
 
   const currentSecondsToMinutes = Math.floor(currentSeconds / 60);
@@ -97,6 +117,15 @@ export function Home() {
   }, [minutes, seconds, activeCycle]);
 
   function handleStopCycle() {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle === activeCycle) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
     setActiveCycleId(null);
     setAmountSecondsPassed(0);
     document.title = "Ignite Timer";
@@ -118,6 +147,7 @@ export function Home() {
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
             {...register("task")}
+            disabled={!!activeCycle}
           />
           <datalist id="task-suggestions">
             <option value="Projeto 1" />
@@ -132,6 +162,7 @@ export function Home() {
             min={5}
             max={60}
             {...register("minutesAmount", { valueAsNumber: true })}
+            disabled={!!activeCycle}
           />
           <span>minutos.</span>
         </FormContainer>
