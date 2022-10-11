@@ -85,6 +85,28 @@ export const StartCountdownButton = styled.button`
     }
 `;
 
+export const StopCountdownButton = styled.button`
+    border: 0;
+    width: 100%;
+    padding: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px;
+    color: ${props => props.theme.white};
+    background: ${props => props.theme['red-500']};
+
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s;
+
+    &:hover {
+        background: ${props => props.theme['red-700']};
+    }
+`;
+
 const BaseInput = styled.input`
     border: 0;
     height: 2.5rem;
