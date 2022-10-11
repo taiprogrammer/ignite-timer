@@ -80,6 +80,11 @@ export function Home() {
     reset();
   }
 
+  function handleStopCycle() {
+    setActiveCycleId(null);
+    setAmountSecondsPassed(0);
+  }
+
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
 
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
@@ -139,7 +144,7 @@ export function Home() {
         </CountdownContainer>
 
         {activeCycle ? (
-          <StopCountdownButton>
+          <StopCountdownButton onClick={handleStopCycle}>
             <HandPalm size={24} />
             Interromper
           </StopCountdownButton>
