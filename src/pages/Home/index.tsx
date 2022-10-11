@@ -80,11 +80,6 @@ export function Home() {
     reset();
   }
 
-  function handleStopCycle() {
-    setActiveCycleId(null);
-    setAmountSecondsPassed(0);
-  }
-
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
 
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
@@ -100,6 +95,12 @@ export function Home() {
       document.title = `${minutes}: ${seconds}`;
     }
   }, [minutes, seconds, activeCycle]);
+
+  function handleStopCycle() {
+    setActiveCycleId(null);
+    setAmountSecondsPassed(0);
+    document.title = "Ignite Timer";
+  }
 
   const task = watch("task");
   const minutesAmount = watch("minutesAmount");
