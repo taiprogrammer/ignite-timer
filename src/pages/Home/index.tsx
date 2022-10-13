@@ -27,6 +27,8 @@ interface CyclesContextType {
   activeCycle: Cycle | undefined;
   activeCycleId: string | null;
   markCurrentCycleAsFinished: () => void;
+  amountSecondsPassed: number;
+  setDifferenceSecondsAmount: (difference: number) => void;
 }
 
 export const CyclesContext = createContext({} as CyclesContextType);
@@ -35,6 +37,7 @@ export function Home() {
   //formState, formState.errors
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
 
   const newCycleFormSchema = zod.object({
     task: zod.string().min(1, "Informe a tarefa."),
@@ -74,6 +77,10 @@ export function Home() {
     });
   }
 
+  function setDifferenceSecondsAmount(difference: number) {
+    setAmountSecondsPassed(difference);
+  }
+
   function handleCreateNewCycle(data: NewCycleFormData) {
     const newCycle: Cycle = {
       id: String(new Date().getTime()),
@@ -84,6 +91,7 @@ export function Home() {
 
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(newCycle.id);
+    // setAmountSecondsPassed(0);
 
     reset();
   }
@@ -99,6 +107,7 @@ export function Home() {
       })
     );
     setActiveCycleId(null);
+    // setAmountSecondsPassed(0);
     document.title = "Ignite Timer";
   }
 
@@ -111,7 +120,13 @@ export function Home() {
     <HomeContainer>
       <form action="" onSubmit={handleSubmit(handleCreateNewCycle)}>
         <CyclesContext.Provider
-          value={{ activeCycle, activeCycleId, markCurrentCycleAsFinished }}
+          value={{
+            activeCycle,
+            activeCycleId,
+            markCurrentCycleAsFinished,
+            amountSecondsPassed,
+            setDifferenceSecondsAmount,
+          }}
         >
           <FormProvider {...newCycleForm}>
             <NewCycleForm />
