@@ -91,7 +91,7 @@ export function Home() {
 
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(newCycle.id);
-    // setAmountSecondsPassed(0);
+    setAmountSecondsPassed(0);
 
     reset();
   }
@@ -107,7 +107,7 @@ export function Home() {
       })
     );
     setActiveCycleId(null);
-    // setAmountSecondsPassed(0);
+    setAmountSecondsPassed(0);
     document.title = "Ignite Timer";
   }
 
