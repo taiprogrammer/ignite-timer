@@ -1,4 +1,4 @@
-import { Cycle } from "../contexts/CyclesContext";
+import { Cycle } from "../../contexts/CyclesContext";
 
 interface CyclesState {
     cycles: Cycle[];
